@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>惊鸿一瞥，便是千年 —— 数字画卷·解构洛神</title>
+<!-- 古风字体 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Liu+Jian+Mao+Cao&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@200;300;400;500;600;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #c9a96e;
+    --gold-deep: #a0783c;
+    --gold-light: #e0c78a;
+    --gold-pale: #f0e4c8;
+    --ink-deep: #0d0b08;
+    --ink: #1a1712;
+    --ink-light: #2a2620;
+    --paper: #f5f0e5;
+    --paper-dark: #e8e0d0;
+    --vermillion: #c04040;
+    --vermillion-dark: #8b2020;
+    --jade: #6b9080;
+    --jade-light: #a4c4b5;
+    --indigo: #3d4a5c;
+    --transition-smooth: cubic-bezier(0.33, 0, 0.2, 1);
+  }
+
+  @font-face {
+    font-family: 'InkBrush';
+    src: local('Ma Shan Zheng'), local('STXingkai'), local('KaiTi'), serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", "STSong", serif;
+    background: var(--ink-deep);
+    color: var(--paper);
+    line-height: 1.9;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    cursor: default;
+  }
+
+  /* ===== Silk texture overlay ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.03;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+  }
+
+  /* ===== Scrollbar ===== */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--ink-deep); }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--gold-deep), var(--gold)); border-radius: 3px; }
+
+  /* ===== Section Base ===== */
+  .section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ===== Scroll progress bar (top of page) ===== */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold-light), var(--gold-deep));
+    z-index: 2000;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 8px rgba(201,169,110,0.4);
+  }
+
+  /* ===== Navigation ===== */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.6s var(--transition-smooth);
+    mix-blend-mode: difference;
+    color: white;
+  }
+  .nav.scrolled {
+    background: rgba(13,11,8,0.85);
+    backdrop-filter: blur(15px);
+    mix-blend-mode: normal;
+    border-bottom: 1px solid rgba(201,169,110,0.1);
+  }
+  .nav-logo {
+    font-family: "Ma Shan Zheng", "InkBrush", "KaiTi", cursive;
+    font-size: 1.5rem;
+    letter-spacing: 0.5em;
+    color: rgba(255,255,255,0.75);
+    transition: color 0.5s;
+  }
+  .nav.scrolled .nav-logo { color: var(--gold-light); }
+  .nav-dots {
+    display: flex;
+    gap: 0.8rem;
+    list-style: none;
+    align-items: center;
+  }
+  .nav-dots li { display: flex; align-items: center; }
+  .nav-dots li + li::before {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+    margin-right: 0.8rem;
+  }
+  .nav-dots a {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    letter-spacing: 0.2em;
+    transition: all 0.4s var(--transition-smooth);
+    padding: 0.2rem 0;
+    position: relative;
+  }
+  .nav-dots a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.4s var(--transition-smooth);
+  }
+  .nav-dots a.active, .nav-dots a:hover {
+    color: var(--gold-light);
+  }
+  .nav-dots a.active::after, .nav-dots a:hover::after {
+    width: 100%;
+  }
+
+  /* ===== Entrance scroll hint ===== */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: hintFloat 2.5s ease-in-out infinite;
+    opacity: 0.6;
+  }
+  .scroll-hint span {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.5);
+  }
+  .scroll-hint .hint-line {
+    width: 1px;
+    height: 30px;
+    background: linear-gradient(180deg, rgba(201,169,110,0.6), transparent);
+    animation: hintLine 2.5s ease-in-out infinite;
+  }
+  @keyframes hintFloat {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+  @keyframes hintLine {
+    0%, 100% { height: 20px; opacity: 0.3; }
+    50% { height: 40px; opacity: 0.8; }
+  }
+
+  /* ===== Paper texture pattern ===== */
+  .paper-texture {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.04;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, #c9a96e 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, #c9a96e 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, #8b7355 0%, transparent 40%);
+  }
+
+  /* ===== Cloud pattern decoration ===== */
+  .cloud-pattern {
+    position: absolute;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.06;
+  }
+
+  /* ===== Cover Section ===== */
+  #cover {
+    background: #080604;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* 印章装饰 */
+  .seal-stamp {
+    position: absolute;
+    z-index: 5;
+    width: 70px;
+    height: 70px;
+    border: 2px solid rgba(192,64,64,0.5);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-8deg);
+    font-family: "Ma Shan Zheng", "KaiTi", cursive;
+    font-size: 1.1rem;
+    color: rgba(192,64,64,0.55);
+    letter-spacing: 0.15em;
+    writing-mode: vertical-rl;
+    padding: 0.5rem;
+    line-height: 1.2;
+  }
+  .seal-stamp.top-right {
+    top: 2rem;
+    right: 2rem;
+  }
+
+  #cover .cover-image-wrap {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+  }
+  #cover .cover-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    filter: brightness(0.65) sepia(0.15);
+    transition: all 1.5s;
+    animation: coverReveal 2s var(--transition-smooth) forwards;
+  }
+  @keyframes coverReveal {
+    from { filter: brightness(0.3) sepia(0.3); transform: scale(1.05); }
+    to { filter: brightness(0.65) sepia(0.15); transform: scale(1); }
+  }
+  #cover .cover-image-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 55% 28%, transparent 12%, rgba(8,6,4,0.5) 42%, rgba(8,6,4,0.9) 88%);
+  }
+  /* 画框边框 */
+  #cover .cover-image-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 1.5rem;
+    border: 1px solid rgba(201,169,110,0.2);
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  /* Eye light */
+  #cover .cover-image-wrap .eye-light {
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,250,235,0.95);
+    box-shadow: 0 0 15px 6px rgba(255,250,235,0.5), 0 0 50px 16px rgba(200,170,120,0.35);
+    top: 27%;
+    left: 56%;
+    z-index: 3;
+    animation: eyeGlow 5s ease-in-out infinite;
+  }
+  @keyframes eyeGlow {
+    0%, 100% { opacity: 0.5; box-shadow: 0 0 15px 6px rgba(255,250,235,0.4); }
+    40% { opacity: 1; box-shadow: 0 0 25px 10px rgba(255,250,235,0.8), 0 0 65px 22px rgba(200,170,120,0.5); }
+    60% { opacity: 0.7; }
+  }
+
+  #cover .cover-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 2rem 4rem 0.5rem;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    align-items: flex-end;
+    position: relative;
+  }
+  #cover .cover-text::before {
+    content: '';
+    position: absolute;
+    right: -2rem;
+    top: 15%;
+    height: 70%;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(201,169,110,0.3), transparent);
+  }
+  #cover .cover-title {
+    font-family: "ZCOOL XiaoWei", "Noto Serif SC", "STKaiti", "KaiTi", serif;
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    line-height: 1.2;
+    color: #f0e8d5;
+    text-shadow:
+      0 0 40px rgba(200,170,120,0.5),
+      0 0 100px rgba(200,170,120,0.25),
+      0 0 200px rgba(180,150,100,0.15),
+      0 2px 4px rgba(0,0,0,0.5);
+    animation: titleReveal 2.5s var(--transition-smooth) forwards;
+  }
+  @keyframes titleReveal {
+    from { opacity: 0; transform: translateY(40px); filter: blur(8px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  #cover .cover-subtitle {
+    font-family: "Noto Serif SC", "STSong", serif;
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.45);
+    margin-right: 2rem;
+    writing-mode: vertical-rl;
+    animation: fadeIn 2.5s ease forwards;
+    animation-delay: 1s;
+    opacity: 0;
+  }
+  #cover .cover-subtitle span { color: var(--gold-light); }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* Ink particles */
+  .ink-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    animation: inkFloat 10s ease-in-out infinite;
+    background: radial-gradient(circle, rgba(200,180,150,0.12), transparent);
+  }
+  @keyframes inkFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+    20% { transform: translate(40px, -50px) scale(1.6); opacity: 0.5; }
+    40% { transform: translate(-30px, -90px) scale(0.7); opacity: 0.15; }
+    60% { transform: translate(50px, -60px) scale(1.4); opacity: 0.4; }
+    80% { transform: translate(-15px, -30px) scale(1.1); opacity: 0.25; }
+  }
+
+  /* ===== Section dividers ===== */
+  .section-divider {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0.5;
+  }
+  .section-divider .diamond {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    opacity: 0.4;
+  }
+  .section-divider .divider-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(180deg, rgba(201,169,110,0.5), transparent);
+    opacity: 0.5;
+  }
+
+  /* ===== Chapter 1 ===== */
+  #chapter1 {
+    background: linear-gradient(180deg, #080604 0%, #14110d 25%, #1a1712 50%, #14110d 75%, #0f0d09 100%);
+    flex-direction: column;
+    padding: 6rem 2rem;
+    position: relative;
+  }
+  /* 水墨远山背景 */
+  #chapter1::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background:
+      radial-gradient(ellipse 120% 100% at 50% 100%, rgba(60,55,45,0.4) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ch1-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 4rem;
+    max-width: 1200px;
+    width: 100%;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .ch1-image-wrap {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    aspect-ratio: 4/3;
+    border: 1px solid rgba(201,169,110,0.15);
+  }
+  /* 八边形画框 */
+  .ch1-image-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(201,169,110,0.12);
+    z-index: 2;
+    pointer-events: none;
+    clip-path: polygon(2% 0%, 98% 0%, 100% 2%, 100% 98%, 98% 100%, 2% 100%, 0% 98%, 0% 2%);
+  }
+  .ch1-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 10s ease, filter 1s;
+    filter: brightness(0.8) sepia(0.1);
+  }
+  .ch1-image-wrap:hover img {
+    transform: scale(1.06);
+    filter: brightness(0.95) sepia(0.05);
+  }
+
+  /* Sight line guide */
+  .sight-line {
+    position: absolute;
+    top: 38%;
+    left: 18%;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .sight-line .line-path {
+    position: absolute;
+    width: 300px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(201,169,110,0.7), rgba(201,169,110,0.05));
+    transform: rotate(-8deg);
+    transform-origin: left center;
+  }
+  .sight-line .line-dot-start {
+    position: absolute;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold), 0 0 20px rgba(201,169,110,0.5);
+    top: -2px;
+    left: -2px;
+    animation: sightPulse 3s ease-in-out infinite;
+  }
+  .sight-line .line-dot-end {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: rgba(201,169,110,0.5);
+    box-shadow: 0 0 8px rgba(201,169,110,0.3);
+    top: -1px;
+    left: 290px;
+    animation: sightPulse 3s ease-in-out infinite;
+    animation-delay: 1.5s;
+  }
+  @keyframes sightPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .ch1-text { z-index: 2; }
+  .chapter-label {
+    font-family: "ZCOOL XiaoWei", "Noto Serif SC", serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    color: var(--gold-deep);
+    margin-bottom: 0.8rem;
+  }
+  .chapter-number {
+    font-family: "Ma Shan Zheng", "KaiTi", cursive;
+    font-size: 2.5rem;
+    color: rgba(201,169,110,0.15);
+    line-height: 1;
+    margin-bottom: -1rem;
+  }
+  .chapter-title {
+    font-family: "Ma Shan Zheng", "ZCOOL XiaoWei", "STKaiti", serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    margin-bottom: 2rem;
+    color: var(--paper);
+    position: relative;
+  }
+  .chapter-title::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin-top: 1.2rem;
+  }
+  .ch1-text p {
+    font-size: 0.95rem;
+    color: rgba(245,240,229,0.65);
+    margin-bottom: 1rem;
+    line-height: 2.3;
+    font-weight: 300;
+  }
+  .ch1-text .highlight {
+    color: var(--gold-light);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* ===== Chapter 2 ===== */
+  #chapter2 {
+    background: linear-gradient(180deg, #0f0d09 0%, #191510 40%, #191510 60%, #0f0d09 100%);
+    flex-direction: column;
+    padding: 6rem 2rem;
+    position: relative;
+  }
+  .ch2-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    max-width: 1300px;
+    width: 100%;
+    align-items: center;
+    position: relative;
+  }
+  .ch2-image-wrap {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16/10;
+    border: 1px solid rgba(201,169,110,0.12);
+  }
+  .ch2-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    filter: brightness(0.8) sepia(0.1) saturate(0.85);
+    transition: all 1.2s;
+  }
+  .ch2-image-wrap:hover img { filter: brightness(0.95) sepia(0.03) saturate(1.05); }
+
+  /* Element extractions - enhanced SVG animated */
+  .ch2-elements {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .floating-element {
+    position: absolute;
+    opacity: 0;
+    animation: elementDrift 7s ease-in-out infinite;
+  }
+  .floating-element:nth-child(1) { top: 10%; left: 6%; animation-delay: 0s; animation-duration: 8s; }
+  .floating-element:nth-child(2) { top: 55%; left: 2%; animation-delay: 2s; animation-duration: 9s; }
+  .floating-element:nth-child(3) { top: 15%; right: 10%; animation-delay: 4s; animation-duration: 7.5s; }
+  @keyframes elementDrift {
+    0%, 100% { opacity: 0.15; transform: translateY(0) rotate(0deg); }
+    25%  { opacity: 0.5; transform: translateY(-18px) rotate(4deg); }
+    50%  { opacity: 0.7; transform: translateY(-30px) rotate(-3deg); }
+    75%  { opacity: 0.35; transform: translateY(-12px) rotate(1deg); }
+  }
+
+  /* Falling petals */
+  .petal {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+    animation: petalFall linear infinite;
+    opacity: 0;
+  }
+  @keyframes petalFall {
+    0%   { opacity: 0; transform: translateY(-10%) rotate(0deg) scale(0.5); }
+    10%  { opacity: 0.7; }
+    80%  { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(110vh) rotate(720deg) scale(0.2); }
+  }
+
+  .ch2-text {
+    z-index: 3;
+    padding: 2rem 2rem 2rem 3rem;
+    position: relative;
+  }
+  /* 古风竖线装饰 */
+  .ch2-text::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5%;
+    height: 90%;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(201,169,110,0.4) 20%, rgba(201,169,110,0.4) 80%, transparent);
+  }
+  .ch2-text::after {
+    content: '◆';
+    position: absolute;
+    left: -4px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--gold-deep);
+    font-size: 0.5rem;
+    opacity: 0.6;
+  }
+  .ch2-text .poem-line {
+    font-family: "Noto Serif SC", "STSong", serif;
+    font-size: 1rem;
+    color: rgba(245,240,229,0.7);
+    margin-bottom: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    transition: all 0.6s var(--transition-smooth);
+    position: relative;
+    padding-left: 1.8rem;
+    cursor: default;
+  }
+  .ch2-text .poem-line:hover {
+    color: var(--gold-light);
+    transform: translateX(8px);
+    text-shadow: 0 0 15px rgba(201,169,110,0.2);
+  }
+  .ch2-text .poem-line.golden {
+    font-family: "Ma Shan Zheng", "Liu Jian Mao Cao", "KaiTi", cursive;
+    font-size: 1.6rem;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    font-weight: 400;
+    text-align: center;
+    padding-left: 0;
+    margin: 2.2rem 0;
+    text-shadow: 0 0 40px rgba(201,169,110,0.3), 0 0 80px rgba(201,169,110,0.1);
+  }
+  .ch2-text .poem-line.golden::before,
+  .ch2-text .poem-line.golden::after {
+    content: '﹏';
+    display: block;
+    color: var(--gold-deep);
+    font-size: 0.7rem;
+    letter-spacing: 0;
+    opacity: 0.4;
+    text-align: center;
+  }
+
+  /* ===== Chapter 3 ===== */
+  #chapter3 {
+    background: #080604;
+    position: relative;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ch3-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ch3-image-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .ch3-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.6) sepia(0.1);
+    will-change: transform;
+  }
+  /* 华丽边框 */
+  .ch3-frame {
+    position: absolute;
+    inset: 2rem;
+    z-index: 3;
+    pointer-events: none;
+    border: 1px solid rgba(201,169,110,0.15);
+    box-shadow: inset 0 0 100px rgba(201,169,110,0.05);
+  }
+  .ch3-frame::before {
+    content: '';
+    position: absolute;
+    top: 1rem; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 1px;
+    background: rgba(201,169,110,0.4);
+  }
+  .ch3-frame::after {
+    content: '';
+    position: absolute;
+    bottom: 1rem; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 1px;
+    background: rgba(201,169,110,0.4);
+  }
+  .ch3-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      radial-gradient(ellipse at 50% 50%, transparent 25%, rgba(8,6,4,0.7) 75%),
+      linear-gradient(0deg, rgba(8,6,4,0.95) 0%, transparent 25%, transparent 75%, rgba(8,6,4,0.95) 100%);
+  }
+  /* Dynamic cloud mist */
+  .ch3-mist {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 15% 70%, rgba(220,200,160,0.08) 0%, transparent 45%),
+      radial-gradient(ellipse at 70% 25%, rgba(220,200,160,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 45% 50%, rgba(230,210,170,0.04) 0%, transparent 65%);
+    animation: mistDrift 12s ease-in-out infinite;
+  }
+  @keyframes mistDrift {
+    0%, 100% { opacity: 0.5; transform: scale(1) translate(0, 0); }
+    33% { opacity: 0.8; transform: scale(1.04) translate(10px, -5px); }
+    66% { opacity: 0.6; transform: scale(1.02) translate(-8px, 3px); }
+  }
+  .ch3-text {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    max-width: 720px;
+    padding: 2rem;
+  }
+  .ch3-text .ch3-title {
+    font-family: "Ma Shan Zheng", "Liu Jian Mao Cao", "KaiTi", cursive;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    margin-bottom: 2.5rem;
+    text-shadow: 0 0 50px rgba(201,169,110,0.5), 0 0 100px rgba(201,169,110,0.3), 0 2px 4px rgba(0,0,0,0.6);
+    animation: goldShimmer 5s ease-in-out infinite;
+  }
+  @keyframes goldShimmer {
+    0%, 100% { text-shadow: 0 0 50px rgba(201,169,110,0.5), 0 0 100px rgba(201,169,110,0.3); }
+    50% { text-shadow: 0 0 70px rgba(220,200,160,0.8), 0 0 130px rgba(201,169,110,0.5), 0 0 180px rgba(200,160,100,0.2); }
+  }
+  .ch3-text p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 1.3rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    line-height: 2.4;
+  }
+  .ch3-text .gold-quote {
+    font-family: "Ma Shan Zheng", "KaiTi", cursive;
+    font-size: 1.4rem;
+    color: var(--gold-light);
+    letter-spacing: 0.2em;
+    margin: 3rem 0;
+    font-style: normal;
+    text-shadow: 0 0 25px rgba(201,169,110,0.35);
+  }
+
+  /* Dragon sparks */
+  .dragon-spark {
+    position: absolute;
+    z-index: 2;
+    width: 2px; height: 2px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkFloat 6s ease-in-out infinite;
+  }
+  @keyframes sparkFloat {
+    0%   { opacity: 0; transform: translate(0, 0) scale(0); }
+    15%  { opacity: 1; transform: translate(25px, -18px) scale(1.8); }
+    50%  { opacity: 0.5; transform: translate(55px, -55px) scale(1); }
+    85%  { opacity: 0.1; transform: translate(80px, -85px) scale(0.3); }
+    100% { opacity: 0; transform: translate(100px, -100px) scale(0); }
+  }
+
+  /* ===== Epilogue ===== */
+  #epilogue {
+    background: #050403;
+    flex-direction: column;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    min-height: 100vh;
+    justify-content: center;
+    gap: 2rem;
+  }
+  /* 墨点装饰 */
+  .ink-splash {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 50%;
+    opacity: 0.04;
+    background: radial-gradient(circle, rgba(201,169,110,0.5) 0%, transparent 70%);
+  }
+  #epilogue .epi-divider {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(180deg, transparent, rgba(201,169,110,0.5), transparent);
+    margin-bottom: 2rem;
+  }
+  #epilogue .epi-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.25em;
+    line-height: 2.8;
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+  }
+  #epilogue .epi-text em {
+    color: var(--gold);
+    font-style: normal;
+    font-family: "Ma Shan Zheng", "KaiTi", cursive;
+    font-size: 1.05em;
+    letter-spacing: 0.3em;
+  }
+
+  /* Music player area */
+  #epilogue .epi-play {
+    margin-top: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    position: relative;
+    z-index: 1;
+  }
+  #epilogue .play-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,169,110,0.25);
+    background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.6s var(--transition-smooth);
+    position: relative;
+  }
+  #epilogue .play-btn::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,169,110,0.1);
+    animation: playPulse 3s ease-in-out infinite;
+  }
+  #epilogue .play-btn::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,169,110,0.05);
+    animation: playPulse 3s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+  @keyframes playPulse {
+    0%, 100% { transform: scale(1); opacity: 0; }
+    50% { transform: scale(1.3); opacity: 1; }
+  }
+  #epilogue .play-btn:hover {
+    border-color: var(--gold);
+    background: radial-gradient(circle, rgba(201,169,110,0.18) 0%, transparent 70%);
+    box-shadow: 0 0 40px rgba(201,169,110,0.25), 0 0 80px rgba(201,169,110,0.1);
+    transform: scale(1.05);
+  }
+  #epilogue .play-btn svg {
+    width: 26px;
+    height: 26px;
+    fill: var(--gold);
+    margin-left: 4px;
+    transition: fill 0.5s;
+  }
+  #epilogue .play-btn:hover svg { fill: var(--gold-light); }
+  #epilogue .play-label {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.3em;
+    transition: color 0.5s;
+  }
+
+  /* Music visualizer bars */
+  .visualizer {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 40px;
+    opacity: 0;
+    transition: opacity 1s;
+    position: relative;
+    z-index: 1;
+  }
+  .visualizer.active { opacity: 0.45; }
+  .visualizer .bar {
+    width: 3px;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold-deep));
+    border-radius: 2px;
+    animation: vizBar 1.4s ease-in-out infinite;
+  }
+  .visualizer .bar:nth-child(1) { height: 50%; animation-delay: 0s; }
+  .visualizer .bar:nth-child(2) { height: 100%; animation-delay: 0.12s; }
+  .visualizer .bar:nth-child(3) { height: 35%; animation-delay: 0.24s; }
+  .visualizer .bar:nth-child(4) { height: 85%; animation-delay: 0.36s; }
+  .visualizer .bar:nth-child(5) { height: 45%; animation-delay: 0.48s; }
+  .visualizer .bar:nth-child(6) { height: 95%; animation-delay: 0.6s; }
+  .visualizer .bar:nth-child(7) { height: 30%; animation-delay: 0.72s; }
+  .visualizer .bar:nth-child(8) { height: 75%; animation-delay: 0.84s; }
+  .visualizer .bar:nth-child(9) { height: 100%; animation-delay: 0.96s; }
+  .visualizer .bar:nth-child(10) { height: 40%; animation-delay: 1.08s; }
+  .visualizer .bar:nth-child(11) { height: 65%; animation-delay: 1.2s; }
+  .visualizer .bar:nth-child(12) { height: 90%; animation-delay: 1.32s; }
+  @keyframes vizBar {
+    0%, 100% { transform: scaleY(1); }
+    40% { transform: scaleY(0.25); }
+    70% { transform: scaleY(0.7); }
+  }
+
+  /* ===== Fade-in on scroll ===== */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 1s var(--transition-smooth), transform 1s var(--transition-smooth);
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== Audio toast ===== */
+  .audio-toast {
+    position: fixed;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: rgba(20,17,12,0.95);
+    border: 1px solid rgba(201,169,110,0.25);
+    border-radius: 50px;
+    padding: 0.7rem 1.8rem;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    opacity: 0;
+    transition: all 0.6s var(--transition-smooth);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .audio-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .audio-toast .toast-text {
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+  }
+  .audio-toast .toast-wave {
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+    height: 14px;
+  }
+  .audio-toast .toast-wave span {
+    width: 2px;
+    background: var(--gold);
+    border-radius: 1px;
+    animation: toastWave 0.7s ease-in-out infinite;
+  }
+  .audio-toast .toast-wave span:nth-child(1) { height: 30%; animation-delay: 0s; }
+  .audio-toast .toast-wave span:nth-child(2) { height: 100%; animation-delay: 0.08s; }
+  .audio-toast .toast-wave span:nth-child(3) { height: 50%; animation-delay: 0.16s; }
+  .audio-toast .toast-wave span:nth-child(4) { height: 80%; animation-delay: 0.24s; }
+  .audio-toast .toast-wave span:nth-child(5) { height: 40%; animation-delay: 0.32s; }
+  @keyframes toastWave {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+  }
+
+  /* ===== Cursor Glow ===== */
+  .cursor-glow {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, rgba(201,169,110,0.03) 30%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s;
+    will-change: left, top;
+  }
+  .cursor-glow.hidden { opacity: 0; }
+
+  /* ===== Particle Canvas ===== */
+  .particle-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9997;
+  }
+
+  /* ===== Image 3D Tilt ===== */
+  .tilt-container {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: transform 0.1s ease-out;
+  }
+  .tilt-container img {
+    transition: transform 0.1s ease-out;
+  }
+
+  /* ===== Light beam on cover ===== */
+  .light-beam {
+    position: absolute;
+    pointer-events: none;
+    z-index: 2;
+    width: 2px;
+    height: 150%;
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(255,250,240,0.15) 30%,
+      rgba(255,250,240,0.35) 50%,
+      rgba(255,250,240,0.15) 70%,
+      transparent 100%);
+    top: -25%;
+    left: 35%;
+    transform: rotate(15deg);
+    filter: blur(3px);
+    animation: beamSweep 8s ease-in-out infinite;
+    opacity: 0.5;
+  }
+  .light-beam:nth-child(2) {
+    left: 55%;
+    transform: rotate(20deg);
+    animation-delay: 4s;
+    opacity: 0.3;
+    width: 1px;
+  }
+  @keyframes beamSweep {
+    0%, 100% { opacity: 0.2; transform: rotate(15deg) translateX(0); }
+    25% { opacity: 0.6; transform: rotate(15deg) translateX(30px); }
+    50% { opacity: 0.3; transform: rotate(15deg) translateX(-20px); }
+    75% { opacity: 0.7; transform: rotate(15deg) translateX(10px); }
+  }
+
+  /* ===== Gold dust motes ===== */
+  .gold-mote {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9996;
+    width: 3px;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: moteBurst 2.5s ease-out forwards;
+    box-shadow: 0 0 6px var(--gold), 0 0 12px rgba(201,169,110,0.5);
+  }
+  @keyframes moteBurst {
+    0%   { opacity: 0; transform: translate(0, 0) scale(0); }
+    30%  { opacity: 0.9; transform: translate(var(--dx), var(--dy)) scale(1.5); }
+    100% { opacity: 0; transform: translate(calc(var(--dx) * 2), calc(var(--dy) * 2)) scale(0); }
+  }
+
+  /* ===== Chapter 3 title readability fix ===== */
+  .ch3-text .ch3-title {
+    font-family: "ZCOOL XiaoWei", "Ma Shan Zheng", "STKaiti", serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    margin-bottom: 2.5rem;
+    text-shadow: 0 0 50px rgba(201,169,110,0.5), 0 0 100px rgba(201,169,110,0.3), 0 2px 4px rgba(0,0,0,0.6);
+    animation: goldShimmer 5s ease-in-out infinite;
+  }
+
+  /* ===== Responsive fix for ch3 title ===== */
+  @media (max-width: 768px) {
+    .ch3-text .ch3-title {
+      font-size: clamp(1.8rem, 6vw, 2.5rem);
+    }
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    #cover {
+      grid-template-columns: 1fr;
+      grid-template-rows: 55vh 45vh;
+    }
+    #cover .cover-text {
+      writing-mode: horizontal-tb;
+      text-orientation: mixed;
+      padding: 2rem 1.5rem;
+      align-items: center;
+      text-align: center;
+    }
+    #cover .cover-text::before { display: none; }
+    #cover .cover-title {
+      font-size: 2.8rem;
+      letter-spacing: 0.25em;
+    }
+    #cover .cover-subtitle { writing-mode: horizontal-tb; margin-right: 0; }
+    #cover .cover-image-wrap::before { inset: 0.8rem; }
+    .ch1-layout, .ch2-layout {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .ch2-layout { grid-template-columns: 1fr; }
+    .ch2-text { padding: 2rem 0; }
+    .ch2-text::before, .ch2-text::after { display: none; }
+    .nav-logo { font-size: 1.2rem; }
+    .nav-dots a { font-size: 0.6rem; }
+    .ch3-frame { inset: 0.8rem; }
+    .seal-stamp { width: 50px; height: 50px; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
+<!-- Particle canvas -->
+<canvas class="particle-canvas" id="particleCanvas"></canvas>
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Navigation -->
+<nav class="nav" id="nav">
+  <span class="nav-logo">洛 神 赋</span>
+  <ul class="nav-dots">
+    <li><a href="#cover" class="active">封面</a></li>
+    <li><a href="#chapter1">壹 · 邂逅</a></li>
+    <li><a href="#chapter2">贰 · 凝视</a></li>
+    <li><a href="#chapter3">叁 · 离别</a></li>
+    <li><a href="#epilogue">回响</a></li>
+  </ul>
+</nav>
+
+<!-- ==================== Cover ==================== -->
+<section class="section" id="cover">
+  <div class="seal-stamp top-right">洛<br>神<br>赋</div>
+  <div class="cover-image-wrap">
+    <div class="light-beam"></div>
+    <div class="light-beam"></div>
+    <img src="images/01-luoshen-portrait.png" alt="洛神">
+    <div class="eye-light"></div>
+    <div class="ink-particle" style="top:48%;left:28%;width:220px;height:220px;"></div>
+    <div class="ink-particle" style="top:58%;left:55%;width:160px;height:160px;animation-delay:2.5s;"></div>
+    <div class="ink-particle" style="top:32%;left:65%;width:190px;height:190px;animation-delay:5s;"></div>
+  </div>
+  <div class="cover-text">
+    <h1 class="cover-title">惊鸿一瞥<br>便是千年</h1>
+    <p class="cover-subtitle">当顾恺之的笔触遇见<span>生成式AI</span><br>洛水女神在数字世界苏醒</p>
+  </div>
+  <div class="scroll-hint">
+    <span>展 卷 浏 览</span>
+    <div class="hint-line"></div>
+  </div>
+</section>
+
+<!-- ==================== Chapter 1: 邂逅 ==================== -->
+<section class="section" id="chapter1">
+  <div class="section-divider" style="top:2rem;bottom:auto;">
+    <div class="diamond"></div>
+  </div>
+  <div class="ch1-layout">
+    <div class="ch1-text fade-in">
+      <div class="chapter-number">壹</div>
+      <div class="chapter-label">第 一 章</div>
+      <h2 class="chapter-title">邂逅<br>雾失楼台</h2>
+      <p>公元222年，洛水之滨。</p>
+      <p>曹植疲惫地停下马车。夕阳西下，车夫在岸边休息。他独自走向水边，恍惚间，看见了她。</p>
+      <p class="highlight">那不是凡间的女子。</p>
+      <p>她站在波光粼粼的水面上，身后是青绿色的山峦和朦胧的月色。风停了，云住了。</p>
+      <p>这一刻，人与神，隔着一条河，隔着生与死的距离，却在这一秒对视。</p>
+    </div>
+    <div class="ch1-image-wrap fade-in">
+      <img src="images/02-caozhi-luoshen.png" alt="曹植与洛神隔水相望">
+      <div class="sight-line">
+        <div class="line-path"></div>
+        <div class="line-dot-start"></div>
+        <div class="line-dot-end"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== Chapter 2: 凝视 ==================== -->
+<section class="section" id="chapter2">
+  <!-- Falling petals -->
+  <div class="petal" style="left:8%; animation-duration:12s; animation-delay:0s; width:12px; height:12px; background:rgba(220,180,170,0.4); border-radius:50% 0 50% 0;"></div>
+  <div class="petal" style="left:25%; animation-duration:14s; animation-delay:3s; width:8px; height:8px; background:rgba(220,190,180,0.35); border-radius:50% 0 50% 0;"></div>
+  <div class="petal" style="left:45%; animation-duration:11s; animation-delay:6s; width:10px; height:10px; background:rgba(210,170,160,0.3); border-radius:50% 0 50% 0;"></div>
+  <div class="petal" style="left:70%; animation-duration:13s; animation-delay:2s; width:9px; height:9px; background:rgba(220,185,175,0.35); border-radius:50% 0 50% 0;"></div>
+  <div class="petal" style="left:88%; animation-duration:15s; animation-delay:5s; width:11px; height:11px; background:rgba(215,175,165,0.3); border-radius:50% 0 50% 0;"></div>
+
+  <div class="ch2-layout">
+    <div class="ch2-image-wrap fade-in">
+      <img src="images/01-luoshen-portrait.png" alt="洛神凝视">
+      <div class="ch2-elements">
+        <!-- Ribbon -->
+        <svg class="floating-element" width="90" height="200" viewBox="0 0 90 200">
+          <defs>
+            <linearGradient id="ribbonGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(230,210,180,0.3)"/>
+              <stop offset="100%" stop-color="rgba(200,170,140,0.05)"/>
+            </linearGradient>
+          </defs>
+          <path d="M45,0 C70,50 25,90 45,140 C65,190 20,200 45,200" fill="none" stroke="url(#ribbonGrad)" stroke-width="3" stroke-linecap="round">
+            <animate attributeName="d" dur="10s" repeatCount="indefinite"
+              values="M45,0 C70,50 25,90 45,140 C65,190 20,200 45,200;
+                      M45,0 C20,50 65,90 45,140 C25,190 70,200 45,200;
+                      M45,0 C70,50 25,90 45,140 C65,190 20,200 45,200"/>
+          </path>
+        </svg>
+        <!-- Lotus -->
+        <svg class="floating-element" width="55" height="55" viewBox="0 0 55 55">
+          <ellipse cx="27" cy="22" rx="14" ry="7" fill="none" stroke="rgba(210,190,170,0.2)" stroke-width="1.5"/>
+          <ellipse cx="16" cy="24" rx="9" ry="5" fill="none" stroke="rgba(210,190,170,0.2)" stroke-width="1" transform="rotate(-22,16,24)"/>
+          <ellipse cx="38" cy="24" rx="9" ry="5" fill="none" stroke="rgba(210,190,170,0.2)" stroke-width="1" transform="rotate(22,38,24)"/>
+          <line x1="27" y1="28" x2="27" y2="46" stroke="rgba(200,180,160,0.12)" stroke-width="1"/>
+        </svg>
+        <!-- Crane -->
+        <svg class="floating-element" width="75" height="65" viewBox="0 0 75 65">
+          <path d="M8,55 Q22,30 32,18 Q30,26 38,12 Q42,22 50,6" fill="none" stroke="rgba(230,215,195,0.2)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M47,8 L62,3 L56,13 Z" fill="rgba(230,215,195,0.12)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="ch2-text fade-in">
+      <div class="chapter-number">贰</div>
+      <div class="chapter-label">第 二 章</div>
+      <h2 class="chapter-title">凝视<br>凌波微步</h2>
+      <p class="poem-line">她动了。</p>
+      <p class="poem-line golden">翩若惊鸿，婉若游龙。</p>
+      <p class="poem-line">她的衣带像春日的云霞一样舒卷，</p>
+      <p class="poem-line">她的步伐轻盈，仿佛踩在凌空的微波之上。</p>
+      <p class="poem-line">桃花瓣落在她的发梢，仙鹤在她的脚边盘旋。</p>
+      <p class="poem-line">她似乎在说话，又似乎在歌唱。</p>
+      <p class="poem-line">曹植听不清，但他看见了——</p>
+      <p class="poem-line" style="color: var(--gold-light); font-style: italic; font-weight: 400;">
+        那是东方美学里，最极致的温柔与哀愁。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== Chapter 3: 离别 ==================== -->
+<section class="section" id="chapter3">
+  <div class="ch3-container">
+    <div class="ch3-image-wrap">
+      <img src="images/03-six-dragons.png" alt="六龙驾车">
+    </div>
+    <div class="ch3-frame"></div>
+    <div class="ch3-overlay"></div>
+    <div class="ch3-mist"></div>
+    <!-- Dragon sparks -->
+    <div class="dragon-spark" style="top:28%;left:22%;animation-delay:0s;"></div>
+    <div class="dragon-spark" style="top:32%;left:27%;animation-delay:0.8s;"></div>
+    <div class="dragon-spark" style="top:26%;left:33%;animation-delay:1.6s;"></div>
+    <div class="dragon-spark" style="top:38%;left:25%;animation-delay:2.4s;"></div>
+    <div class="dragon-spark" style="top:30%;left:38%;animation-delay:3.2s;"></div>
+    <div class="dragon-spark" style="top:22%;left:48%;animation-delay:4s;"></div>
+    <div class="dragon-spark" style="top:35%;left:42%;animation-delay:4.8s;"></div>
+    <div class="dragon-spark" style="top:40%;left:30%;animation-delay:5.6s;"></div>
+    <div class="ch3-text fade-in">
+      <div class="chapter-number" style="color:rgba(201,169,110,0.2);">叁</div>
+      <div class="chapter-label" style="color: var(--gold);">第 三 章</div>
+      <h2 class="ch3-title">离别 · 六龙御天</h2>
+      <p>人神殊途，终究是一场梦。</p>
+      <p>洛神要走了。六条青龙拉起了云车，凤凰在前方引路，鲸鲵在车旁护卫。</p>
+      <p>她坐在华丽的车盖下，回头最后看了一眼岸边的曹植。</p>
+      <p>这一眼，穿过了一千八百年的时光，落在了我们每一个人的屏幕上。</p>
+      <p class="gold-quote">仿佛兮若轻云之蔽月<br>飘飖兮若流风之回雪</p>
+      <p>她走了，只留下满屏的祥云，和曹植无尽的怅惘。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== Epilogue ==================== -->
+<section class="section" id="epilogue">
+  <div class="ink-splash" style="width:300px;height:300px;top:20%;left:10%;"></div>
+  <div class="ink-splash" style="width:200px;height:200px;top:50%;right:15%;"></div>
+  <div class="ink-splash" style="width:250px;height:250px;bottom:10%;left:30%;"></div>
+
+  <div class="epi-divider"></div>
+  <div class="epi-text fade-in">
+    <p>顾恺之画下了这一刻，</p>
+    <p>我们用<em>AI</em>重现了这一刻。</p>
+    <p>只要还有人记得这份美，<em>洛神就从未离去</em>。</p>
+  </div>
+  <div class="epi-play fade-in" id="playBtn" title="点击播放音乐">
+    <div class="play-btn">
+      <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
+    </div>
+    <span class="play-label">点 击 播 放 ， 听 见 洛 水 的 声 音</span>
+  </div>
+  <div class="visualizer" id="visualizer">
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  </div>
+  <p class="fade-in" style="font-size:0.6rem;color:rgba(255,255,255,0.15);letter-spacing:0.2em;margin-top:3rem;position:relative;z-index:1;">
+    数字画卷 · 解构洛神 &copy; 音乐作业展示
+  </p>
+</section>
+
+<!-- Hidden background video: full-viewport so browser loads it, opacity:0 so invisible -->
+<video id="bgVideo" autoplay loop playsinline style="position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;opacity:0;pointer-events:none;z-index:-1;">
+  <source src="video/luoshen.mp4" type="video/mp4">
+  <source src="video/luoshen.webm" type="video/webm">
+</video>
+<!-- Audio Toast -->
+<div class="audio-toast" id="audioToast">
+  <div class="toast-wave">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <span class="toast-text">洛水之声 · 正在播放</span>
+</div>
+
+<!-- Background audio (支持 MP3 / WAV / OGG 格式) -->
+<audio id="bgAudio" preload="auto">
+  <!-- 将音乐文件放入 audio 文件夹，命名为 luoshen.mp3 或 luoshen.wav -->
+  <source src="audio/luoshen.mp3" type="audio/mpeg">
+  <source src="audio/luoshen.wav" type="audio/wav">
+</audio>
+
+<script>
+  // ===== Scroll progress bar =====
+  const scrollProgress = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    scrollProgress.style.width = progress + '%';
+  });
+
+  // ===== Scroll animations =====
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // ===== Nav active state =====
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.nav-dots a');
+  const nav = document.getElementById('nav');
+
+  window.addEventListener('scroll', () => {
+    // Nav background
+    if (window.scrollY > 80) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+
+    // Active section
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.offsetTop - 300;
+      if (window.scrollY >= top) {
+        current = sec.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  });
+
+  // ===== Smooth scroll for nav =====
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ===== Music & Video player with aggressive auto-play =====
+  const playBtn = document.getElementById('playBtn');
+  const audio = document.getElementById('bgAudio');
+  const visualizer = document.getElementById('visualizer');
+  const audioToast = document.getElementById('audioToast');
+  const bgVideo = document.getElementById('bgVideo');
+  let isPlaying = false;
+  let toastTimer;
+  let autoPlayAttempted = false;
+
+  // Ensure video loops explicitly (belt + suspenders)
+  if (bgVideo) bgVideo.loop = true;
+
+  // Backup: if video ends without looping, force restart
+  if (bgVideo) {
+    bgVideo.addEventListener('ended', () => {
+      bgVideo.currentTime = 0;
+      bgVideo.play().catch(() => {});
+    });
+  }
+
+  function showToast(msg) {
+    if (!audioToast) return;
+    audioToast.querySelector('.toast-text').textContent = msg;
+    audioToast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      audioToast.classList.remove('show');
+    }, 3000);
+  }
+
+  function updateUI_playing() {
+    visualizer.classList.add('active');
+    const svg = playBtn.querySelector('.play-btn svg');
+    svg.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+    playBtn.querySelector('.play-label').textContent = '正 在 播 放 · 点 击 暂 停';
+    isPlaying = true;
+  }
+
+  function updateUI_paused() {
+    visualizer.classList.remove('active');
+    const svg = playBtn.querySelector('.play-btn svg');
+    svg.innerHTML = '<polygon points="8,5 19,12 8,19"/>';
+    playBtn.querySelector('.play-label').textContent = '点 击 播 放 ， 听 见 洛 水 的 声 音';
+    isPlaying = false;
+  }
+
+  function startAll() {
+    if (isPlaying) return;
+    // Try to play video with sound (unmuted), video at 30% volume
+    if (bgVideo) {
+      bgVideo.muted = false;
+      bgVideo.volume = 0.3;
+      bgVideo.play().catch(() => {
+        // If unmuted fails, try muted
+        bgVideo.muted = true;
+        bgVideo.play().catch(() => {});
+      });
+    }
+    // Try to play audio
+    if (audio) {
+      audio.play().then(() => {
+        updateUI_playing();
+        showToast('🎵 洛水之声 · 正在播放');
+      }).catch(() => {
+        // Audio blocked — still show as playing (video might be working)
+        updateUI_playing();
+        showToast('🎵 请点击页面任意位置以解锁音频');
+      });
+    }
+  }
+
+  function stopAll() {
+    if (audio) audio.pause();
+    if (bgVideo) bgVideo.pause();
+    updateUI_paused();
+  }
+
+  // Aggressive auto-play: try multiple times via multiple triggers
+  function attemptAutoPlay() {
+    if (autoPlayAttempted) return;
+    autoPlayAttempted = true;
+
+    // Try video first (unmuted for sound, 30% volume)
+    if (bgVideo) {
+      bgVideo.muted = false;
+      bgVideo.volume = 0.3;
+      bgVideo.play().then(() => {
+        updateUI_playing();
+        showToast('🎬 洛神赋 · 自动播放中');
+      }).catch(() => {
+        // Unmuted failed, try muted
+        bgVideo.muted = true;
+        bgVideo.play().catch(() => {});
+      });
+    }
+
+    // Try audio
+    if (audio) {
+      audio.volume = 0.3;
+      audio.play().then(() => {
+        updateUI_playing();
+        let vol = 0.3;
+        const fadeUp = setInterval(() => {
+          vol = Math.min(0.7, vol + 0.05);
+          audio.volume = vol;
+          if (vol >= 0.7) clearInterval(fadeUp);
+        }, 500);
+      }).catch(() => {
+        console.log('Audio autoplay blocked, waiting for user interaction');
+      });
+    }
+  }
+
+  // Multi-trigger autoplay: try on every possible event
+  function scheduleAutoPlay() {
+    // Try immediately (script execution time)
+    attemptAutoPlay();
+
+    // Try on DOMContentLoaded (if not already fired)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attemptAutoPlay);
+    }
+
+    // Try on window.load
+    window.addEventListener('load', attemptAutoPlay);
+
+    // Try after a short delay (some browsers need a tick)
+    setTimeout(attemptAutoPlay, 100);
+    setTimeout(attemptAutoPlay, 500);
+    setTimeout(attemptAutoPlay, 1000);
+
+    // Fallback: play on first user interaction
+    const playOnInteract = () => {
+      if (!isPlaying) {
+        attemptAutoPlay();
+        startAll();
+      }
+      if (isPlaying) {
+        document.removeEventListener('click', playOnInteract);
+        document.removeEventListener('touchstart', playOnInteract);
+        document.removeEventListener('scroll', playOnInteract);
+        document.removeEventListener('keydown', playOnInteract);
+      }
+    };
+    document.addEventListener('click', playOnInteract);
+    document.addEventListener('touchstart', playOnInteract);
+    document.addEventListener('scroll', playOnInteract, { once: true });
+    document.addEventListener('keydown', playOnInteract, { once: true });
+  }
+
+  // Kick off
+  scheduleAutoPlay();
+
+  // Play/Pause button
+  playBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (isPlaying) {
+      stopAll();
+      showToast('洛水之声 · 已暂停');
+    } else {
+      startAll();
+    }
+  });
+
+  // ===== Parallax on scroll =====
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+
+    // Chapter 3 parallax
+    const ch3Img = document.querySelector('.ch3-image-wrap');
+    if (ch3Img) {
+      const ch3Section = document.getElementById('chapter3');
+      const ch3Top = ch3Section.offsetTop;
+      const ch3Height = ch3Section.offsetHeight;
+      const relativeScroll = scrolled - ch3Top;
+      if (relativeScroll > -ch3Height && relativeScroll < ch3Height) {
+        ch3Img.style.transform = `translateY(${relativeScroll * 0.15}px)`;
+      }
+    }
+
+    // Cover parallax
+    const coverImg = document.querySelector('#cover .cover-image-wrap img');
+    if (coverImg) {
+      coverImg.style.transform = `scale(${1 + scrolled * 0.0003})`;
+    }
+  });
+
+  // ===== Keyboard controls =====
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && e.target === document.body) {
+      e.preventDefault();
+      if (isPlaying) stopAll();
+      else startAll();
+    }
+  });
+
+  // ===== Cursor Glow =====
+  const cursorGlow = document.getElementById('cursorGlow');
+  let mouseX = -500, mouseY = -500;
+  let currentX = -500, currentY = -500;
+  let glowHidden = true;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (glowHidden) {
+      glowHidden = false;
+      cursorGlow.classList.remove('hidden');
+    }
+  });
+  document.addEventListener('mouseleave', () => {
+    glowHidden = true;
+    cursorGlow.classList.add('hidden');
+  });
+
+  // Smooth cursor glow follow
+  function animateGlow() {
+    currentX += (mouseX - currentX) * 0.08;
+    currentY += (mouseY - currentY) * 0.08;
+    cursorGlow.style.left = currentX + 'px';
+    cursorGlow.style.top = currentY + 'px';
+    requestAnimationFrame(animateGlow);
+  }
+  animateGlow();
+
+  // ===== Particle Canvas System =====
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let canvasW, canvasH;
+
+  function resizeCanvas() {
+    canvasW = canvas.width = window.innerWidth;
+    canvasH = canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  class GoldParticle {
+    constructor() {
+      this.reset(true);
+    }
+    reset(init) {
+      this.x = Math.random() * canvasW;
+      this.y = init ? Math.random() * canvasH : canvasH + 20;
+      this.size = Math.random() * 2 + 0.5;
+      this.speedY = -(Math.random() * 0.4 + 0.15);
+      this.speedX = (Math.random() - 0.5) * 0.3;
+      this.wobble = Math.random() * Math.PI * 2;
+      this.wobbleSpeed = (Math.random() - 0.5) * 0.02;
+      this.opacity = Math.random() * 0.5 + 0.1;
+      this.life = Math.random() * 300 + 200;
+      this.age = 0;
+    }
+    update() {
+      this.age++;
+      this.wobble += this.wobbleSpeed;
+      this.x += this.speedX + Math.sin(this.wobble) * 0.3;
+      this.y += this.speedY;
+      if (this.age > this.life || this.y < -20 || this.x < -20 || this.x > canvasW + 20) {
+        this.reset(false);
+      }
+    }
+    draw(ctx) {
+      const fadeIn = Math.min(1, this.age / 40);
+      const fadeOut = Math.max(0, 1 - (this.age - this.life + 60) / 60);
+      const alpha = this.opacity * fadeIn * fadeOut;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(201,169,110,${alpha})`;
+      ctx.fill();
+      // Glow
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(201,169,110,${alpha * 0.3})`;
+      ctx.fill();
+    }
+  }
+
+  const PARTICLE_COUNT = 45;
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push(new GoldParticle());
+  }
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvasW, canvasH);
+    particles.forEach(p => { p.update(); p.draw(ctx); });
+    requestAnimationFrame(animateParticles);
+  }
+  animateParticles();
+
+  // ===== 3D Tilt on Images =====
+  document.querySelectorAll('.ch1-image-wrap, .ch2-image-wrap').forEach(wrap => {
+    wrap.classList.add('tilt-container');
+    wrap.addEventListener('mousemove', (e) => {
+      const rect = wrap.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      wrap.style.transform = `perspective(1000px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.02)`;
+      const img = wrap.querySelector('img');
+      if (img) img.style.transform = 'scale(1.04)';
+    });
+    wrap.addEventListener('mouseleave', () => {
+      wrap.style.transform = 'perspective(1000px) rotateY(0) rotateX(0) scale(1)';
+      const img = wrap.querySelector('img');
+      if (img) img.style.transform = 'scale(1)';
+    });
+  });
+
+  // ===== Mouse Parallax (subtle depth on text) =====
+  document.querySelectorAll('.cover-text, .ch3-text').forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      el.style.transform = `translate(${x * 15}px, ${y * 15}px)`;
+      el.style.transition = 'transform 0.3s ease-out';
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'translate(0, 0)';
+      el.style.transition = 'transform 0.8s ease-out';
+    });
+  });
+
+  // ===== Chapter 3 image tilt =====
+  const ch3ImageWrap = document.querySelector('.ch3-image-wrap');
+  if (ch3ImageWrap) {
+    document.getElementById('chapter3').addEventListener('mousemove', (e) => {
+      const rect = ch3ImageWrap.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      ch3ImageWrap.style.transform = `scale(1.03) translate(${x * 20}px, ${y * 20}px)`;
+      ch3ImageWrap.style.transition = 'transform 0.4s ease-out';
+    });
+    document.getElementById('chapter3').addEventListener('mouseleave', () => {
+      ch3ImageWrap.style.transform = 'scale(1) translate(0, 0)';
+      ch3ImageWrap.style.transition = 'transform 1s ease-out';
+    });
+  }
+
+  // ===== Golden motes on hover =====
+  let moteTimers = [];
+  document.querySelectorAll('.poem-line.golden, .gold-quote').forEach(el => {
+    el.addEventListener('mouseenter', (e) => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      for (let i = 0; i < 6; i++) {
+        const mote = document.createElement('div');
+        mote.className = 'gold-mote';
+        mote.style.left = cx + 'px';
+        mote.style.top = cy + 'px';
+        mote.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        mote.style.animationDelay = (Math.random() * 0.5) + 's';
+        mote.style.setProperty('--dx', (Math.random() - 0.5) * 100 + 'px');
+        mote.style.setProperty('--dy', -(Math.random() * 60 + 20) + 'px');
+        document.body.appendChild(mote);
+        const timer = setTimeout(() => mote.remove(), 3000);
+        moteTimers.push(timer);
+      }
+    });
+  });
+</script>
+<!-- 洛神赋网页增强：动态视觉 / 视差滚动 / 美化播放器 / 留言墙 -->
+<script src="js/dynamic-background.js"></script>
+  <script src="js/luoshen-enhance.js"></script>
+</body>
+</html>
